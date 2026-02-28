@@ -27,18 +27,25 @@ local OrionLib = {
 }
 
 RunService.RenderStepped:Connect(function()
-	local hue = (tick() % 5) / 5
-	local rainbow = Color3.fromHSV(hue, 1, 1)
-
-	OrionLib.Themes[OrionLib.SelectedTheme].Stroke = rainbow
-	OrionLib.Themes[OrionLib.SelectedTheme].Divider = rainbow
-
+	local baseHue = (tick() % 5) / 5 -- 5秒で1周
+	
 	for _, v in pairs(OrionLib.ThemeObjects) do
 		if v.ThemeTag == "Stroke" or v.ThemeTag == "Divider" then
-			if v.Object:IsA("UIStroke") then
-				v.Object.Color = rainbow
+			
+			local obj = v.Object
+			local xFactor = 0
+			
+			if obj.AbsoluteSize.X > 0 then
+				xFactor = obj.AbsolutePosition.X / workspace.CurrentCamera.ViewportSize.X
+			end
+			
+			local hue = (baseHue + xFactor) % 1
+			local rainbow = Color3.fromHSV(hue, 1, 1)
+			
+			if obj:IsA("UIStroke") then
+				obj.Color = rainbow
 			else
-				v.Object.BackgroundColor3 = rainbow
+				obj.BackgroundColor3 = rainbow
 			end
 		end
 	end
