@@ -26,36 +26,36 @@ local OrionLib = {
 	SaveCfg = false
 }
 
--- ▼ 虹ライティング（強制適用版）
 task.spawn(function()
+	local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+
 	while true do
 		local camera = workspace.CurrentCamera
 		if camera then
-			local baseHue = (tick() % 5) / 5 -- 5秒で1周
+			local baseHue = (tick() % 5) / 5
 			
-			for _, obj in pairs(CoreGui:GetDescendants()) do
+			for _, obj in pairs(playerGui:GetDescendants()) do
 				
-				-- UIStrokeを虹化
+				-- すべてのUIStrokeを虹化
 				if obj:IsA("UIStroke") and obj.Parent then
-					local xFactor = obj.Parent.AbsolutePosition.X / camera.ViewportSize.X
-					local hue = (baseHue + xFactor) % 1
+					local x = obj.Parent.AbsolutePosition.X
+					local hue = (baseHue + (x / camera.ViewportSize.X)) % 1
 					obj.Color = Color3.fromHSV(hue, 1, 1)
 				end
 				
-				-- Dividerフレームを虹化（名前一致）
-				if obj:IsA("Frame") and obj.Name == "Divider" then
-					local xFactor = obj.AbsolutePosition.X / camera.ViewportSize.X
-					local hue = (baseHue + xFactor) % 1
+				-- 細い線系フレームも虹化（Divider対応）
+				if obj:IsA("Frame") and obj.AbsoluteSize.Y <= 2 then
+					local x = obj.AbsolutePosition.X
+					local hue = (baseHue + (x / camera.ViewportSize.X)) % 1
 					obj.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
 				end
 				
 			end
 		end
 		
-		task.wait(0.03)
+		task.wait()
 	end
 end)
--- ▲ 虹ライティング終了
 
 --Feather Icons https://github.com/evoincorp/lucideblox/tree/master/src/modules/util - Created by 7kayoh
 local Icons = {}
