@@ -13,7 +13,7 @@ local OrionLib = {
 	Flags = {},
 	Themes = {
 		Default = {
-			Main = Color3.fromRGB(25, 25, 25),
+			Main = Color3.fromRGB(54, 76, 94),
 			Second = Color3.fromRGB(32, 32, 32),
 			Stroke = Color3.fromRGB(60, 60, 60),
 			Divider = Color3.fromRGB(60, 60, 60),
@@ -26,33 +26,32 @@ local OrionLib = {
 	SaveCfg = false
 }
 
--- ▼ 虹ライティング開始
+-- ▼ 虹ライティング（強制適用版）
 task.spawn(function()
 	while true do
 		local camera = workspace.CurrentCamera
-		local baseHue = (tick() % 5) / 5 -- 5秒で1周
-
-		for _, v in pairs(OrionLib.ThemeObjects) do
-			if v and v.Object and (v.ThemeTag == "Stroke" or v.ThemeTag == "Divider") then
+		if camera then
+			local baseHue = (tick() % 5) / 5 -- 5秒で1周
+			
+			for _, obj in pairs(CoreGui:GetDescendants()) do
 				
-				local obj = v.Object
-				local xFactor = 0
-
-				if camera and obj.AbsoluteSize.X > 0 then
-					xFactor = obj.AbsolutePosition.X / camera.ViewportSize.X
+				-- UIStrokeを虹化
+				if obj:IsA("UIStroke") and obj.Parent then
+					local xFactor = obj.Parent.AbsolutePosition.X / camera.ViewportSize.X
+					local hue = (baseHue + xFactor) % 1
+					obj.Color = Color3.fromHSV(hue, 1, 1)
 				end
-
-				local hue = (baseHue + xFactor) % 1
-				local rainbow = Color3.fromHSV(hue, 1, 1)
-
-				if obj:IsA("UIStroke") then
-					obj.Color = rainbow
-				else
-					obj.BackgroundColor3 = rainbow
+				
+				-- Dividerフレームを虹化（名前一致）
+				if obj:IsA("Frame") and obj.Name == "Divider" then
+					local xFactor = obj.AbsolutePosition.X / camera.ViewportSize.X
+					local hue = (baseHue + xFactor) % 1
+					obj.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
 				end
+				
 			end
 		end
-
+		
 		task.wait(0.03)
 	end
 end)
