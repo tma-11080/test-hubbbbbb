@@ -28,22 +28,32 @@ local OrionLib = {
 
 task.spawn(function()
 	local playerGui = LocalPlayer:WaitForChild("PlayerGui")
-
+	
+	-- OrionのScreenGuiを特定（名前にOrionが含まれる）
+	local orionGui
+	for _, v in pairs(playerGui:GetChildren()) do
+		if v:IsA("ScreenGui") and string.find(v.Name, "Orion") then
+			orionGui = v
+			break
+		end
+	end
+	
+	if not orionGui then return end
+	
 	while true do
 		local camera = workspace.CurrentCamera
 		if camera then
 			local baseHue = (tick() % 5) / 5
 			
-			for _, obj in pairs(playerGui:GetDescendants()) do
+			for _, obj in pairs(orionGui:GetDescendants()) do
 				
-				-- すべてのUIStrokeを虹化
 				if obj:IsA("UIStroke") and obj.Parent then
 					local x = obj.Parent.AbsolutePosition.X
 					local hue = (baseHue + (x / camera.ViewportSize.X)) % 1
 					obj.Color = Color3.fromHSV(hue, 1, 1)
 				end
 				
-				-- 細い線系フレームも虹化（Divider対応）
+				-- Dividerは高さ2px以下の線で判定
 				if obj:IsA("Frame") and obj.AbsoluteSize.Y <= 2 then
 					local x = obj.AbsolutePosition.X
 					local hue = (baseHue + (x / camera.ViewportSize.X)) % 1
