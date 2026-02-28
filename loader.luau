@@ -26,30 +26,37 @@ local OrionLib = {
 	SaveCfg = false
 }
 
-RunService.RenderStepped:Connect(function()
-	local baseHue = (tick() % 5) / 5 -- 5秒で1周
-	
-	for _, v in pairs(OrionLib.ThemeObjects) do
-		if v.ThemeTag == "Stroke" or v.ThemeTag == "Divider" then
-			
-			local obj = v.Object
-			local xFactor = 0
-			
-			if obj.AbsoluteSize.X > 0 then
-				xFactor = obj.AbsolutePosition.X / workspace.CurrentCamera.ViewportSize.X
-			end
-			
-			local hue = (baseHue + xFactor) % 1
-			local rainbow = Color3.fromHSV(hue, 1, 1)
-			
-			if obj:IsA("UIStroke") then
-				obj.Color = rainbow
-			else
-				obj.BackgroundColor3 = rainbow
+-- ▼ 虹ライティング開始
+task.spawn(function()
+	while true do
+		local camera = workspace.CurrentCamera
+		local baseHue = (tick() % 5) / 5 -- 5秒で1周
+
+		for _, v in pairs(OrionLib.ThemeObjects) do
+			if v and v.Object and (v.ThemeTag == "Stroke" or v.ThemeTag == "Divider") then
+				
+				local obj = v.Object
+				local xFactor = 0
+
+				if camera and obj.AbsoluteSize.X > 0 then
+					xFactor = obj.AbsolutePosition.X / camera.ViewportSize.X
+				end
+
+				local hue = (baseHue + xFactor) % 1
+				local rainbow = Color3.fromHSV(hue, 1, 1)
+
+				if obj:IsA("UIStroke") then
+					obj.Color = rainbow
+				else
+					obj.BackgroundColor3 = rainbow
+				end
 			end
 		end
+
+		task.wait(0.03)
 	end
 end)
+-- ▲ 虹ライティング終了
 
 --Feather Icons https://github.com/evoincorp/lucideblox/tree/master/src/modules/util - Created by 7kayoh
 local Icons = {}
