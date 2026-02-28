@@ -540,24 +540,25 @@ function OrionLib:MakeWindow(WindowConfig)
 		UnlockMouse(true)
 	end
 
-	local MobileOpenButton = SetChildren(SetProps(MakeElement("Button"), 
-	
-	{
-		BackgroundTransparency = 0, 
-		Parent = Orion, 
-		Text =  "Open",
-		TextScaled = true,
-		TextSize = 14,
-		TextColor3 = Color3.new(0, 0, 0),
-		BackgroundColor = BrickColor.new(0, 0, 0),
-		TextStrokeColor3 = Color3.new(255, 255, 255),
-		TextStrokeTransparency = 0,
-		Size = UDim2.new(0.035, 0, 0.035, 0),
-		AnchorPoint = Vector2.new(0.5, 0.5),
-		Position = UDim2.new(0.5, 0, 0.5, 0), 
-		Visible = false, 
-		Font = Enum.Font.GothamBold
-	}), {MakeElement("Corner", 0.25), SetProps(MakeElement("AspectRatio"), {DominantAxis = 0, AspectRatio = 0.986, AspectType = 1})})
+	local MobileOpenButton = SetProps(
+    MakeElement("ImageButton", "rbxassetid://102272836959278"),
+    {
+        Parent = Orion,
+        Size = UDim2.new(0.035, 0, 0.035, 0),
+        AnchorPoint = Vector2.new(0.5, 0.5),
+        Position = UDim2.new(0.5, 0, 0.5, 0),
+        BackgroundTransparency = 1,
+        Visible = false
+    }
+)
+
+MakeElement("Corner", 0.25).Parent = MobileOpenButton
+SetProps(
+    MakeElement("AspectRatio"),
+    {DominantAxis = 0, AspectRatio = 0.986, AspectType = 1}
+).Parent = MobileOpenButton
+
+MakeDraggable(MobileOpenButton, MobileOpenButton)
 
 	MakeDraggable(MobileOpenButton, MobileOpenButton)
 
