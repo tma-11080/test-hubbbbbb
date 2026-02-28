@@ -27,43 +27,40 @@ local OrionLib = {
 }
 
 task.spawn(function()
-	local playerGui = LocalPlayer:WaitForChild("PlayerGui")
-	
-	-- OrionのScreenGuiを特定（名前にOrionが含まれる）
-	local orionGui
-	for _, v in pairs(playerGui:GetChildren()) do
-		if v:IsA("ScreenGui") and string.find(v.Name, "Orion") then
-			orionGui = v
-			break
-		end
-	end
-	
-	if not orionGui then return end
-	
 	while true do
+		local baseHue = (tick() % 5) / 5
 		local camera = workspace.CurrentCamera
-		if camera then
-			local baseHue = (tick() % 5) / 5
-			
-			for _, obj in pairs(orionGui:GetDescendants()) do
+		
+		for _, themeObj in pairs(OrionLib.ThemeObjects) do
+			if themeObj and themeObj.Object and themeObj.ThemeTag then
 				
-				if obj:IsA("UIStroke") and obj.Parent then
-					local x = obj.Parent.AbsolutePosition.X
-					local hue = (baseHue + (x / camera.ViewportSize.X)) % 1
-					obj.Color = Color3.fromHSV(hue, 1, 1)
-				end
-				
-				-- Dividerは高さ2px以下の線で判定
-				if obj:IsA("Frame") and obj.AbsoluteSize.Y <= 2 then
-					local x = obj.AbsolutePosition.X
-					local hue = (baseHue + (x / camera.ViewportSize.X)) % 1
-					obj.BackgroundColor3 = Color3.fromHSV(hue, 1, 1)
+				if themeObj.ThemeTag == "Stroke" or themeObj.ThemeTag == "Divider" then
+					
+					local obj = themeObj.Object
+					local xFactor = 0
+					
+					if camera and obj.AbsolutePosition then
+						xFactor = obj.AbsolutePosition.X / camera.ViewportSize.X
+					end
+					
+					local hue = (baseHue + xFactor) % 1
+					local rainbow = Color3.fromHSV(hue, 1, 1)
+					
+					-- 直接Colorプロパティを触る
+					if obj:IsA("UIStroke") then
+						obj.Color = rainbow
+					elseif obj:IsA("Frame") or obj:IsA("TextLabel") then
+						obj.BackgroundColor3 = rainbow
+					end
+					
+					-- テーマ側も更新（上書き対策）
+					OrionLib.Themes[OrionLib.SelectedTheme][themeObj.ThemeTag] = rainbow
 				end
 				
 			end
 		end
 		
-		task.wait()
+		task.wait(0.03)
 	end
 end)
 
