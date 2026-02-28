@@ -26,6 +26,24 @@ local OrionLib = {
 	SaveCfg = false
 }
 
+RunService.RenderStepped:Connect(function()
+	local hue = (tick() % 5) / 5
+	local rainbow = Color3.fromHSV(hue, 1, 1)
+
+	OrionLib.Themes[OrionLib.SelectedTheme].Stroke = rainbow
+	OrionLib.Themes[OrionLib.SelectedTheme].Divider = rainbow
+
+	for _, v in pairs(OrionLib.ThemeObjects) do
+		if v.ThemeTag == "Stroke" or v.ThemeTag == "Divider" then
+			if v.Object:IsA("UIStroke") then
+				v.Object.Color = rainbow
+			else
+				v.Object.BackgroundColor3 = rainbow
+			end
+		end
+	end
+end)
+
 --Feather Icons https://github.com/evoincorp/lucideblox/tree/master/src/modules/util - Created by 7kayoh
 local Icons = {}
 
