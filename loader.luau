@@ -544,7 +544,7 @@ function OrionLib:MakeWindow(WindowConfig)
     MakeElement("ImageButton", "rbxassetid://102272836959278"),
     {
         Parent = Orion,
-        Size = UDim2.new(0.035, 0, 0.035, 0),
+        Size = UDim2.new(0.07, 0, 0.07, 0),
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.new(0.5, 0, 0.5, 0),
         BackgroundTransparency = 1,
