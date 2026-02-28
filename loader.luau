@@ -357,7 +357,7 @@ end)
 
 CreateElement("Button", function()
 	local Button = Create("TextButton", {
-		Text = "lolll",
+		Text = "",
 		AutoButtonColor = false,
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0
@@ -544,7 +544,7 @@ function OrionLib:MakeWindow(WindowConfig)
     MakeElement("ImageButton", "rbxassetid://102272836959278"),
     {
         Parent = Orion,
-        Size = UDim2.new(0.07, 0, 0.07, 0),
+        Size = UDim2.new(0.1, 0, 0.1, 0),
         AnchorPoint = Vector2.new(0.5, 0.5),
         Position = UDim2.new(0.5, 0, 0.5, 0),
         BackgroundTransparency = 1,
